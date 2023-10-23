@@ -28,7 +28,7 @@
             android:id="@+id/ivLeft"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/left"
+            android:src="@drawable/left_foreground"
             android:scaleType="centerInside"
             android:layout_alignParentLeft="true"
             />
@@ -37,7 +37,7 @@
             android:id="@+id/ivRight"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/right"
+            android:src="@drawable/right_foreground"
             android:scaleType="centerInside"
             android:layout_alignParentRight="true"
             />
@@ -70,7 +70,7 @@
             android:id="@+id/ivPlus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/plus"/>
+            android:src="@drawable/plus_foreground"/>
 
 
 
