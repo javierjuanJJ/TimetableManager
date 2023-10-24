@@ -19,6 +19,7 @@ public class Task implements Comparable<Task> {
 
    @RequiresApi(api = Build.VERSION_CODES.O)
    public Task(){
+      formatter = DateTimeFormatter.ofPattern("HH:mm");
       calendar = Calendar.getInstance();
       from = getCalendarFrom(calendar);
       to = getCalendarFrom(calendar);
