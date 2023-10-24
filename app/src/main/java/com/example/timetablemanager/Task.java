@@ -15,10 +15,11 @@ public class Task implements Comparable<Task> {
    private String task, color;
    private LocalTime from, to;
    private DateTimeFormatter formatter;
+   private Calendar calendar;
 
    @RequiresApi(api = Build.VERSION_CODES.O)
    public Task(){
-      Calendar calendar = Calendar.getInstance();
+      calendar = Calendar.getInstance();
       from = getCalendarFrom(calendar);
       to = getCalendarFrom(calendar);
 
