@@ -27,7 +27,7 @@ class Database extends SQLiteOpenHelper {
    }
 
    public void checkTable(String date){
-      String create = "CREATE TABLE IF NOT EXISTS " + date + " ('ID' integer, 'TASK' text, 'FROM' text, 'TO' text, 'Color', text);";
+      String create = String.format("CREATE TABLE IF NOT EXISTS %s ('ID' integer, 'TASK' text, 'FROM' text, 'TO' text, 'Color', text);", date);
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -35,7 +35,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void addTask(Task task, String date){
       checkTable(date);
-      String create = "INSERT INTO '" + date + "' ('ID' , 'TASK' , 'FROM', 'TO' , 'COLOR') VALUES(" + task.getId() + " , " + task.getTask() + " , " + task.getFromToString() + " , " + task.getToString() + " , " + task.getColor()  +");";
+      String create = String.format("INSERT INTO '%s' ('ID' , 'TASK' , 'FROM', 'TO' , 'COLOR') VALUES(%d , %s , %s , %s , %s);", date, task.getId(), task.getTask(), task.getFromToString(), task.getToString(), task.getColor());
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -43,7 +43,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public ArrayList<Task> getAllTasks(String date){
       checkTable(date);
-      String create = "SELECT * FROM " + date + " ;";
+      String create = String.format("SELECT * FROM %s;", date);
       ArrayList<Task> tasks = new ArrayList<>();
       SQLiteDatabase db = this.getReadableDatabase();
       Cursor cursor = db.rawQuery(create, null);
@@ -87,7 +87,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void updateTask(Task task, String date){
       checkTable(date);
-      String create = "UPDATE '" + date + "' SET 'TASK' = '" + task.getTask() + "', 'FROM' = " + task.getFromToString() + "', 'TO' = " + task.getToString() + "', 'COLOR' = " + task.getColor() + "' WHERE 'ID'' = " + task.getId() +  ";";
+      String create = String.format("UPDATE '%s' SET 'TASK' = '%s', 'FROM' = '%s', 'TO' = '%s', 'COLOR' = '%s' WHERE 'ID'' = %d;", date, task.getTask(), task.getFromToString(), task.getToString(), task.getColor(), task.getId());
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -95,7 +95,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void deleteTask(int idTask, String date){
       checkTable(date);
-      String create = "DELETE FROM '" + date + "' WHERE 'ID' = '" + idTask + "';";
+      String create = String.format("DELETE FROM '%s' WHERE 'ID' = '%d';", date, idTask);
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
