@@ -21,12 +21,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.timetablemanager.Pickers.OwnTimePickerDialog;
+import com.example.timetablemanager.Pickers.onDateResultPickerDialog;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class TaskEditor extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class TaskEditor extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, onDateResultPickerDialog {
 
 
     private EditText etTask;
@@ -108,28 +112,13 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
         switch (view.getId()) {
 
             case R.id.tvClickHere1:
-                TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        String ho = new DecimalFormat("00").format(i);
-                        String min = new DecimalFormat("00").format(i1);
-                        tvClickHere1.setText(ho + ":" + min);
 
-                    }
-                }, task.getFrom().getHour(), task.getFrom().getMinute(), true);
-                timePickerDialog.show();
+                OwnTimePickerDialog timePickerDialog1 = new OwnTimePickerDialog(this, task.getFrom());
+                timePickerDialog1.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.tvClickHere2:
-                TimePickerDialog timePickerDialog1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        String ho = new DecimalFormat("00").format(i);
-                        String min = new DecimalFormat("00").format(i1);
-                        tvClickHere2.setText(ho + ":" + min);
-
-                    }
-                }, task.getFrom().getHour(), task.getFrom().getMinute(), true);
-                timePickerDialog1.show();
+                OwnTimePickerDialog timePickerDialog2 = new OwnTimePickerDialog(this, task.getFrom());
+                timePickerDialog2.show(getSupportFragmentManager(), "timePicker");
                 break;
 
             case R.id.tvSubmit:
@@ -173,5 +162,19 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void resultDialog(LocalTime datePickerDialog) {
+        String ho = new DecimalFormat("00").format(datePickerDialog.getHour());
+        String min = new DecimalFormat("00").format(datePickerDialog.getMinute());
+        tvClickHere1.setText(ho + ":" + min);
+        tvClickHere2.setText(ho + ":" + min);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }
