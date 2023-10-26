@@ -23,6 +23,7 @@ public class Task implements Comparable<Task> {
       calendar = Calendar.getInstance();
       from = getCalendarFrom(calendar);
       to = getCalendarFrom(calendar);
+      task="";
 
    }
 

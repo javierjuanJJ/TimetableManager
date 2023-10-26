@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,7 +26,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class TaskEditor extends AppCompatActivity implements View.OnClickListener {
+public class TaskEditor extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
 
     private EditText etTask;
@@ -35,7 +36,7 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
     private Button tvSubmit;
     private Database database;
     private Task task;
-    private int date;
+    private String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,27 +66,8 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
 
         database = new Database(this);
         task = new Task();
-        /*
-        intent.putExtra("ID", task.getId());
-      intent.putExtra("Task", task.getTask());
-      intent.putExtra("From", task.getFromToString());
-      intent.putExtra("To", task.getToString());
-      intent.putExtra("Color", task.getColor());
-      intent.putExtra("Date", showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-            <color name="rose">#facedb</color>
-    <color name="blue">#a6daff</color>
-    <color name="green">#caf2ce</color>
-    <color name="red">#fca5ae</color>
-    <color name="orange">#fcda9c</color>
-    <color name="grey">#dddddd</color>
-    <color name="purple">#eedaff</color>
-    <color name="yellow">#fffbb0</color>
-
-
-         */
-        date = database.getNextId(getIntent().getStringExtra("Date"));
-        task.setId(date);
+        date = getIntent().getStringExtra("Date");
         String[] colors = {"rose","blue","green","orange","grey","purple","yellow"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, colors);
@@ -103,14 +85,21 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
             etTask.setText(task.getTask());
             tvClickHere1.setText(task.getFromToString());
             tvClickHere2.setText(task.getToString());
+            btnDelete.setVisibility(View.VISIBLE);
+        }
+        else {
+            btnDelete.setVisibility(View.GONE);
         }
         etTask.setOnClickListener(this);
         tvClickHere1.setOnClickListener(this);
         tvClickHere2.setOnClickListener(this);
         tvSubmit.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
+        sColor.setOnItemSelectedListener(this);
 
-        btnDelete.setVisibility(View.GONE);
+
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -118,16 +107,6 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.sColor:
-                sColor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        task.setColor(sColor.getSelectedItem().toString());
-                        GradientDrawable background = (GradientDrawable) tvColor.getBackground();
-                        background.setColor(task.getColorId(TaskEditor.this));
-                    }
-                });
-                break;
 
             case R.id.tvClickHere1:
                 TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -136,7 +115,6 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
                         String ho = new DecimalFormat("00").format(i);
                         String min = new DecimalFormat("00").format(i1);
                         tvClickHere1.setText(ho + ":" + min);
-                        tvClickHere2.setText(ho + ":" + min);
 
                     }
                 }, task.getFrom().getHour(), task.getFrom().getMinute(), true);
@@ -148,7 +126,6 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
                         String ho = new DecimalFormat("00").format(i);
                         String min = new DecimalFormat("00").format(i1);
-                        tvClickHere1.setText(ho + ":" + min);
                         tvClickHere2.setText(ho + ":" + min);
 
                     }
@@ -157,7 +134,7 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.tvSubmit:
-                if (task.getTask().isEmpty()){
+                if (etTask.getText().toString().isEmpty()){
                     etTask.setError("Task cannot be empty");
                 }
                 if (tvClickHere1.getText().toString().equals("Click here") || tvClickHere2.getText().toString().equals("Click here")){
@@ -165,8 +142,13 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
                 }
                 task.setTask(etTask.getText().toString());
                 if (getIntent().hasExtra("Task")) {
-                    database.updateTask(task, String.valueOf(date));
+                    database.updateTask(task, date);
                     Toast.makeText(this, "Task updated succesfully", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    database.addTask(task, date);
+                    Toast.makeText(this, "Task inserted succesfully", Toast.LENGTH_SHORT).show();
+
                 }
                 finish();
                 break;
@@ -178,5 +160,19 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
                 break;
 
         }
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        task.setColor(sColor.getSelectedItem().toString());
+
+        GradientDrawable background = (GradientDrawable) tvColor.getBackground();
+        background.setColor(task.getColorId(this));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

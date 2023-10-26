@@ -74,7 +74,7 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    private void screenTaskEditor(Task task) {
       Intent intent = new Intent(context, TaskEditor.class);
 
-      intent.putExtra("ID", task.getId());
+      intent.putExtra("Id", task.getId());
       intent.putExtra("Task", task.getTask());
       intent.putExtra("From", task.getFromToString());
       intent.putExtra("To", task.getToString());
@@ -89,7 +89,7 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    @Override
    public boolean onLongClick(View view) {
       switch (view.getId()) {
-         case R.id.date:
+         case R.id.tvTask:
             if (task != null) {
                screenTaskEditor(task);
             }

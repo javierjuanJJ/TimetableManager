@@ -13,5 +13,5 @@
     <color name="lines">#c5c5c5</color>
     <color name="main">#88c057</color>
     <color name="backgrounds">#e5e5e5</color>
-    <color name="transparent">#0000000</color>
+    <color name="transparent">#000000</color>
 </resources>

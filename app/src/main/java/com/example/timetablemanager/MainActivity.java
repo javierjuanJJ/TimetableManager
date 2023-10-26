@@ -9,6 +9,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,11 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         date.setOnClickListener(this);
         showedDate = LocalDate.now();
         mainDate = DateTimeFormatter.ofPattern("EEEE dd/MM");
-
+        listTasks = new ArrayList<>();
         database = new Database(this);
+        refreshAdapter();
+
+        date.setOnClickListener(this);
+        ivLeft.setOnClickListener(this);
+        llPlus.setOnClickListener(this);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void refreshAdapter() {
+        listTasks = database.getAllTasks(showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         listAdapter = new ListAdapter(listTasks, this, showedDate);
         lvTop.setAdapter(listAdapter);
+        listAdapter.notifyDataSetChanged();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -82,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 refreshDate();
                 break;
 
-            case R.id.ivPlus:
+            case R.id.llPlus:
                 Intent intent = new Intent(MainActivity.this, TaskEditor.class);
                 intent.putExtra("Date", showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 startActivity(intent);
@@ -97,15 +111,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         refreshDate();
+        refreshAdapter();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        refreshDate();
+        refreshAdapter();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void refreshDate(){
         date.setText(showedDate.format(mainDate));
-        ArrayList<Task> ts = database.getAllTasks(showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        Collections.sort(ts);
-        listTasks = ts;
-        listAdapter.notifyDataSetChanged();
-
     }
 }
