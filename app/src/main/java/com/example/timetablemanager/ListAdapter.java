@@ -77,10 +77,9 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    @RequiresApi(api = Build.VERSION_CODES.O)
    private void screenTaskEditor(Task task) {
       Intent intent = new Intent(context, TaskEditor.class);
+
       intent.putExtra("Task", true);
-
       intent.putExtra("Date", showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
       intent.putExtra("taskObject", task);
 
       context.startActivity(intent);

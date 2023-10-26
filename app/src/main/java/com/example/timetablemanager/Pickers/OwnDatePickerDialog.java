@@ -7,29 +7,29 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class OwnTimePickerDialog extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-    onDateResultPickerDialog result;
-    private LocalTime date;
+public class OwnDatePickerDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    onTimeResultPickerDialog result;
+    private LocalDate date;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public OwnTimePickerDialog(onDateResultPickerDialog result) {
-        date = LocalTime.now();
+    public OwnDatePickerDialog(onTimeResultPickerDialog result) {
+        date = LocalDate.now();
         this.result = result;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public OwnTimePickerDialog(onDateResultPickerDialog result, LocalTime date) {
-        this.date = LocalTime.of(date.getHour(), date.getMinute());
+    public OwnDatePickerDialog(onTimeResultPickerDialog result, LocalDate date) {
+        this.date = LocalDate.of(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
         this.result = result;
     }
     @NonNull
@@ -37,13 +37,13 @@ public class OwnTimePickerDialog extends DialogFragment implements TimePickerDia
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Create a new instance of TimePickerDialog and return it.
-        return new TimePickerDialog(getActivity(), this, date.getHour(), date.getMinute(), DateFormat.is24HourFormat(getActivity()));
+        return new DatePickerDialog(requireContext(), this, date.getYear(), date.getMonthValue(), date.getDayOfMonth());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        LocalTime time = LocalTime.of(i, i1);
-        result.resultDialog(time);
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        this.date = LocalDate.of(year, month, day);
+        result.resultDialog(this.date);
     }
 }

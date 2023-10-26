@@ -22,7 +22,7 @@
             android:gravity="center"
             android:text="Date"
             android:textColor="@color/black"
-            android:textSize="30dp"/>
+            android:textSize="30dp" />
 
         <ImageView
             android:id="@+id/ivLeft"

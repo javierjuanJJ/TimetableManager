@@ -17,12 +17,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.timetablemanager.Pickers.OwnDatePickerDialog;
+import com.example.timetablemanager.Pickers.OwnTimePickerDialog;
+import com.example.timetablemanager.Pickers.onTimeResultPickerDialog;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, onTimeResultPickerDialog {
 
     private TextView date;
     private RelativeLayout rlTop;
@@ -53,16 +57,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ivPlus = findViewById(R.id.ivPlus);
         lvTop = findViewById(R.id.lvTop);
         llPlus = findViewById(R.id.llPlus);
-        date.setOnClickListener(this);
+
         showedDate = LocalDate.now();
         mainDate = DateTimeFormatter.ofPattern("EEEE dd/MM");
         listTasks = new ArrayList<>();
         database = new Database(this);
         refreshAdapter();
 
-        date.setOnClickListener(this);
+        rlTop.setOnClickListener(this);
         ivLeft.setOnClickListener(this);
         llPlus.setOnClickListener(this);
+        date.setOnClickListener(this);
 
     }
 
@@ -80,20 +85,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.date:
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, i, i1, i2) -> {
+                /*DatePickerDialog datePickerDialog = new DatePickerDialog(this, (datePicker, i, i1, i2) -> {
                     showedDate = LocalDate.of(i, i1, i2);
                 }, showedDate.getYear(), showedDate.getMonthValue() - 1, showedDate.getDayOfMonth());
-                datePickerDialog.show();
+                datePickerDialog.show();*/
+                OwnDatePickerDialog dialogPicker = new OwnDatePickerDialog(this, showedDate);
+                dialogPicker.show(getSupportFragmentManager(), "datePicker");
+                refreshDate();
+                refreshAdapter();
                 break;
 
             case R.id.ivLeft:
                 showedDate.minusDays(1);
                 refreshDate();
+                refreshAdapter();
                 break;
 
             case R.id.ivRight:
                 showedDate.plusDays(1);
                 refreshDate();
+                refreshAdapter();
                 break;
 
             case R.id.llPlus:
@@ -125,5 +136,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void refreshDate(){
         date.setText(showedDate.format(mainDate));
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void resultDialog(LocalDate datePickerDialog) {
+        showedDate =  LocalDate.of(datePickerDialog.getYear(), datePickerDialog.getMonthValue() + 1, datePickerDialog.getDayOfMonth());
     }
 }
