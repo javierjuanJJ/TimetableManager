@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListView lvTop;
     private LinearLayout llPlus;
     private LocalDate showedDate;
+    private DateTimeFormatter mainDate;
+    private Database database;
+    private ArrayList<Task> listTasks;
+    private ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         llPlus = findViewById(R.id.llPlus);
         date.setOnClickListener(this);
         showedDate = LocalDate.now();
+        mainDate = DateTimeFormatter.ofPattern("EEEE dd/MM");
 
+        database = new Database(this);
+        listAdapter = new ListAdapter(listTasks, this, showedDate);
+        lvTop.setAdapter(listAdapter);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("NonConstantResourceId")
@@ -82,13 +92,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onResume() {
         super.onResume();
         refreshDate();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void refreshDate(){
+        date.setText(showedDate.format(mainDate));
+        ArrayList<Task> ts = database.getAllTasks(showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        Collections.sort(ts);
+        listTasks = ts;
+        listAdapter.notifyDataSetChanged();
 
     }
 }

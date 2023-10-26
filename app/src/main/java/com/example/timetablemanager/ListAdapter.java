@@ -24,7 +24,7 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    private LocalDate showedDate;
    private Task task;
 
-   public ListAdapter(ArrayList<Task> tasks, Context context,LocalDate showedDate) {
+   public ListAdapter(ArrayList<Task> tasks, Context context, LocalDate showedDate) {
       this.tasks = tasks;
       this.context = context;
       this.showedDate = showedDate;
