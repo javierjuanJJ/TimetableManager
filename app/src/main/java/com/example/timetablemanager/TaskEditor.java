@@ -74,17 +74,16 @@ public class TaskEditor extends AppCompatActivity implements View.OnClickListene
         sColor.setAdapter(adapter);
 
         if (getIntent().hasExtra("Task")){
-            task.setId(getIntent().getIntExtra("Id",0));
-            task.setTask(getIntent().getStringExtra("Task"));
-            task.setFrom(getIntent().getStringExtra("From"));
-            task.setTo(getIntent().getStringExtra("To"));
-            task.setColor(getIntent().getStringExtra("Color"));
+            task = (Task) getIntent().getSerializableExtra("taskObject");
             sColor.setSelection(adapter.getPosition(task.getColor()));
+
             GradientDrawable background = (GradientDrawable) tvColor.getBackground();
             background.setColor(task.getColorId(TaskEditor.this));
+
             etTask.setText(task.getTask());
             tvClickHere1.setText(task.getFromToString());
             tvClickHere2.setText(task.getToString());
+
             btnDelete.setVisibility(View.VISIBLE);
         }
         else {

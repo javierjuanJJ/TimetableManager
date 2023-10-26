@@ -6,16 +6,40 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, Serializable {
    private int id;
    private String task, color;
    private LocalTime from, to;
-   private DateTimeFormatter formatter;
+   private transient DateTimeFormatter formatter;
    private Calendar calendar;
+
+
+   private void writeObject(ObjectOutputStream oos)
+           throws IOException {
+      oos.defaultWriteObject();
+      oos.writeObject("HH:mm");
+   }
+
+   @RequiresApi(api = Build.VERSION_CODES.O)
+   private void readObject(ObjectInputStream ois)
+           throws ClassNotFoundException, IOException {
+      ois.defaultReadObject();
+      String houseNumber = (String) ois.readObject();
+      DateTimeFormatter a = DateTimeFormatter.ofPattern(houseNumber);
+      this.setFormatter(a);
+   }
+
+   public void setFormatter(DateTimeFormatter formatter) {
+      this.formatter = formatter;
+   }
 
    @RequiresApi(api = Build.VERSION_CODES.O)
    public Task(){
