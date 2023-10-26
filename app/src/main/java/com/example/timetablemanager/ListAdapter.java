@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.timetablemanager.Constants.TanleConstants;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -78,9 +80,9 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    private void screenTaskEditor(Task task) {
       Intent intent = new Intent(context, TaskEditor.class);
 
-      intent.putExtra("Task", true);
-      intent.putExtra("Date", showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-      intent.putExtra("taskObject", task);
+      intent.putExtra(TanleConstants.TASK_NAME, true);
+      intent.putExtra(TanleConstants.DATE_NAME, showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+      intent.putExtra(TanleConstants.TASK_OBJECT_NAME, task);
 
       context.startActivity(intent);
    }

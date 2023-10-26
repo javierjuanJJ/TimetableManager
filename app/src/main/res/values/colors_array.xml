@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="colors_name">
+        <item>rose</item>
+        <item>blue</item>
+        <item>green</item>
+        <item>orange</item>
+        <item>grey</item>
+        <item>purple</item>
+        <item>yellow</item>
+    </string-array>
+
+    <string-array translatable="false" name="colors_content">
+        <item>#facedb</item>
+        <item>#a6daff</item>
+        <item>#caf2ce</item>
+        <item>#fcda9c</item>
+        <item>#dddddd</item>
+        <item>#eedaff</item>
+        <item>#fffbb0</item>
+    </string-array>
+
+</resources>

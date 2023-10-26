@@ -11,11 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.example.timetablemanager.Constants.TanleConstants;
+
 import java.util.ArrayList;
 
 class Database extends SQLiteOpenHelper {
+
    public Database(@Nullable Context context) {
-      super(context, "Database4", null, 1);
+      super(context, TanleConstants.DATABASE_NAME, null, TanleConstants.VERSION_DATABASE);
    }
 
    @Override
@@ -29,7 +32,7 @@ class Database extends SQLiteOpenHelper {
    }
 
    public void checkTable(String date){
-      String create = String.format("CREATE TABLE IF NOT EXISTS %s (_id INTEGER PRIMARY KEY AUTOINCREMENT, task_table TEXT, from_table TEXT, to_table TEXT, color_table TEXT);", getStringTable(date));
+      String create = String.format(TanleConstants.CREATE_SENTENCE, getStringTable(date));
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -42,7 +45,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void addTask(Task task, String date){
       checkTable(date);
-      String create = String.format("INSERT INTO %s (task_table , from_table, to_table , color_table) VALUES(\"%s\" , \"%s\" , \"%s\" , \"%s\");", getStringTable(date), task.getTask(), task.getFromToString(), task.getToString(), task.getColor());
+      String create = String.format(TanleConstants.INSERT_SENTENCE, getStringTable(date), task.getTask(), task.getFromToString(), task.getToString(), task.getColor());
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -50,7 +53,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public ArrayList<Task> getAllTasks(String date){
       checkTable(date);
-      String create = String.format("SELECT * FROM %s;", getStringTable(date));
+      String create = String.format(TanleConstants.SELECT_ALL_SENTENCE, getStringTable(date));
       ArrayList<Task> tasks = new ArrayList<>();
       SQLiteDatabase db = this.getReadableDatabase();
       Cursor cursor = db.rawQuery(create, null);
@@ -61,11 +64,10 @@ class Database extends SQLiteOpenHelper {
             Task task = new Task();
 
             task.setId(cursor.getInt(0));
-            Log.i("idTaskUpdated", String.valueOf(task.getId()));
             task.setTask(cursor.getString(1));
             task.setFrom(cursor.getString(2));
             task.setTo(cursor.getString(3));
-            task.setColor(cursor.getString(cursor.getColumnIndexOrThrow("color_table")));
+            task.setColor(cursor.getString(cursor.getColumnIndexOrThrow(TanleConstants.COLOR_TABLE_NAME)));
 
             tasks.add(task);
          }
@@ -77,30 +79,10 @@ class Database extends SQLiteOpenHelper {
    }
 
    @RequiresApi(api = Build.VERSION_CODES.O)
-   public int getNextId(String date){
-      ArrayList<Task> tasks = getAllTasks(date);
-      int id = 0;
-      int size = tasks.size();
-      int lastIndex;
-
-      if (!tasks.isEmpty()){
-         /*lastIndex = size - 1;
-         id = tasks.get(lastIndex).getId() + 1;*/
-         id = tasks.size() + 1;
-      }
-      else {
-         id = 1;
-      }
-
-      return id;
-   }
-
-
-   @RequiresApi(api = Build.VERSION_CODES.O)
    public void updateTask(Task task, String date){
       checkTable(date);
-      Log.i("idTaskUpdated", String.valueOf(task.getId()));
-      String create = String.format("UPDATE %s SET task_table = '%s', from_table = '%s', to_table = '%s', color_table = '%s' WHERE _id = %d;", getStringTable(date), task.getTask(), task.getFromToString(), task.getToString(), task.getColor(), task.getId());
+
+      String create = String.format(TanleConstants.UPDATE_SENTENCE, getStringTable(date), task.getTask(), task.getFromToString(), task.getToString(), task.getColor(), task.getId());
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }
@@ -108,7 +90,7 @@ class Database extends SQLiteOpenHelper {
    @RequiresApi(api = Build.VERSION_CODES.O)
    public void deleteTask(int idTask, String date){
       checkTable(date);
-      String create = String.format("DELETE FROM %s WHERE _id = %d;", getStringTable(date), idTask);
+      String create = String.format(TanleConstants.DELETE_SENTENCE, getStringTable(date), idTask);
       SQLiteDatabase db = this.getWritableDatabase();
       db.execSQL(create);
    }

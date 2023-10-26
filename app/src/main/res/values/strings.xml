@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Timetable Manager</string>
+    <string name="datepickerText">datePicker</string>
+    <string name="timepickerText">timePicker</string>
+    <string name="task_cannot_be_empty">Task cannot be empty</string>
+    <string name="select_time_s">Select time: %s</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="task_updated_succesfully">Task updated successfully</string>
+    <string name="task_inserted_succesfully">Task inserted successfully</string>
+    <string name="task_deleted_succesfully">Task deleted successfully</string>
+    <string name="date">Date</string>
+    <string name="task_editor">Task Editor</string>
+    <string name="task">Task</string>
+    <string name="from_text">From:</string>
+    <string name="click_here">Click here</string>
+    <string name="toText">To:</string>
+    <string name="color">Color:</string>
+    <string name="submit">Submit</string>
+    <string name="delete_task">Delete task</string>
 </resources>

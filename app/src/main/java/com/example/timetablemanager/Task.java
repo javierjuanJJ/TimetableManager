@@ -1,10 +1,12 @@
 package com.example.timetablemanager;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.content.res.ResourcesCompat;
+
+import com.example.timetablemanager.Constants.TanleConstants;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -117,37 +119,9 @@ public class Task implements Comparable<Task>, Serializable {
    }
 
    public int getColorId(Context context){
-      int color = 0;
-      switch (getColor().toLowerCase()){
-         case "blue":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.blue, null);
-            break;
-         case "rose":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.rose, null);
-            break;
-         case "green":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.green, null);
-            break;
-         case "red":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.red, null);
-            break;
-         case "orange":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.orange, null);
-            break;
-         case "grey":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.grey, null);
-            break;
-         case "purple":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.purple, null);
-            break;
-         case "yellow":
-            color = ResourcesCompat.getColor(context.getResources(), R.color.yellow, null);
-            break;
-         default:
-            color = ResourcesCompat.getColor(context.getResources(), R.color.black, null);
-            break;
-      }
-      return color;
+      String[] stringArray = context.getResources().getStringArray(R.array.colors_content);
+      int position = TanleConstants.findColor(context.getResources().getStringArray(R.array.colors_name), getColor());
+      return Color.parseColor(stringArray[position]);
    }
 
    public LocalTime getFrom() {
