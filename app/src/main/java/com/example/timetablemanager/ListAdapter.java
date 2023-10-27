@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+
+import com.example.timetablemanager.Constants.TanleConstants;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +26,9 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    private Context context;
    private LocalDate showedDate;
    private Task task;
+   private TextView tvFrom;
+   private TextView tvTo;
+   private TextView tvTask;
 
    public ListAdapter(ArrayList<Task> tasks, Context context, LocalDate showedDate) {
       this.tasks = tasks;
@@ -52,9 +58,9 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
       LayoutInflater inflater = LayoutInflater.from(context);
       View view1 = inflater.inflate(R.layout.task, null);
 
-      TextView tvFrom = view1.findViewById(R.id.tvFrom);
-      TextView tvTo = view1.findViewById(R.id.tvTo);
-      TextView tvTask = view1.findViewById(R.id.tvTask);
+      tvFrom = view1.findViewById(R.id.tvFrom);
+      tvTo = view1.findViewById(R.id.tvTo);
+      tvTask = view1.findViewById(R.id.tvTask);
 
       task = tasks.get(i);
 
@@ -74,12 +80,9 @@ public class ListAdapter extends BaseAdapter implements View.OnLongClickListener
    private void screenTaskEditor(Task task) {
       Intent intent = new Intent(context, TaskEditor.class);
 
-      intent.putExtra("Id", task.getId());
-      intent.putExtra("Task", task.getTask());
-      intent.putExtra("From", task.getFromToString());
-      intent.putExtra("To", task.getToString());
-      intent.putExtra("Color", task.getColor());
-      intent.putExtra("Date", showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+      intent.putExtra(TanleConstants.TASK_NAME, true);
+      intent.putExtra(TanleConstants.DATE_NAME, showedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+      intent.putExtra(TanleConstants.TASK_OBJECT_NAME, task);
 
       context.startActivity(intent);
    }
